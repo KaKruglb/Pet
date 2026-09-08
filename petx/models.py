@@ -43,7 +43,7 @@ class Pet(models.Model):
 class Perfil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="perfil")
     email = models.EmailField(unique=True, blank = False)
-    telefone = models.CharField(max_length=20, blank = False)
+    telefone = models.CharField(max_length=20, blank = False, unique = True)
     cpf = models.CharField(max_length=14, unique=True, blank = False)
     data_nascimento = models.DateField(blank = False)
     ativo = models.BooleanField(default=True)

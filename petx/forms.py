@@ -15,7 +15,7 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         
         model = User
-        fields = ("username",)
+        fields = ("username", "first_name", "last_name")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -42,7 +42,7 @@ class ProfileForm(forms.ModelForm):
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if Perfil.objects.filter(emial = email).exists():
+        if Perfil.objects.filter(email = email).exists():
             raise forms.ValidationError('Email registrado a outro usuario')
         return email
 
