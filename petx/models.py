@@ -52,6 +52,24 @@ class Perfil(models.Model):
         return self.user.username
     
 
+class Tutor(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="tutor")
+    perfil = models.OneToOneField(Perfil, on_delete=models.CASCADE, related_name="tutor")
+    pets = models.ManyToManyField(Pet, related_name="tutores", blank=True)
+    ativo = models.BooleanField(default=True)
+
+
+class Adotante(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="adotante")
+    perfil = models.OneToOneField(Perfil, on_delete=models.CASCADE, related_name="adotante")
+    ativo = models.BooleanField(default=True)
+
+
+class Admin(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="admin")
+    
+
+
 class Instituicao(models.Model):
     razao = models.CharField(max_length=500)
     nome = models.CharField(max_length=100)
@@ -73,3 +91,18 @@ class Endereco(models.Model):
     bairro = models.CharField(max_length=100)
     cidade = models.CharField(max_length=100)
     estado = models.CharField(max_length=2)
+
+ 
+ 
+   
+class Anuncio(models.Model):
+    instituicao = models.ForeignKey(Instituicao, on_delete=models.CASCADE, related_name="anuncios")
+    
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name="anuncios")
+    titulo = models.CharField(max_length=200)
+    descricao = models.TextField()
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    data_atualizacao = models.DateTimeField(auto_now=True)
+    ativo = models.BooleanField(default=True)
+    
+    
