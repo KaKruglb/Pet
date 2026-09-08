@@ -46,4 +46,5 @@ class ProfileForm(forms.ModelForm):
             raise forms.ValidationError('Email registrado a outro usuario')
         return email
 
-        
+
+

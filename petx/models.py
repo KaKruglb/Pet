@@ -50,3 +50,26 @@ class Perfil(models.Model):
     
     def __str__(self):
         return self.user.username
+    
+
+class Instituicao(models.Model):
+    razao = models.CharField(max_length=500)
+    nome = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=200)
+    email = models.EmailField(unique=True, blank = False)
+    telefone = models.CharField(max_length=20, blank = False, unique = True)
+    cnpj = models.CharField(max_length=18, unique=True, blank = False)
+    endereco = models.OneToOneField('Endereco', on_delete=models.CASCADE, related_name="instituicao", null=True, blank=True)
+    status = models.BooleanField(default=True)    
+    
+    
+    
+class Endereco(models.Model):
+    instituicao = models.OneToOneField(Instituicao, on_delete=models.CASCADE, related_name="endereco")
+    cep = models.CharField(max_length=9)
+    logradouro = models.CharField(max_length=200)
+    numero = models.CharField(max_length=10)
+    complemento = models.CharField(max_length=100, blank=True)
+    bairro = models.CharField(max_length=100)
+    cidade = models.CharField(max_length=100)
+    estado = models.CharField(max_length=2)
