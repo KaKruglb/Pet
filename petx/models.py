@@ -22,6 +22,15 @@ class Porte(models.Model):
     def __str__(self):
         return self.porte
     
+    
+class Status(models.Model):
+    status = models.CharField(max_length = 200, unique = True)
+    
+    def __str__(self):
+        return self.status
+    
+    
+    
 class Cor(models.Model): 
     cor = models.CharField(max_length = 100, unique = True)
     
@@ -29,7 +38,7 @@ class Cor(models.Model):
         return self.cor
     
     
-    class Perfil(models.Model):
+class Perfil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="perfil")
     email = models.EmailField(unique=True, blank = False)
     telefone = models.CharField(max_length=20, blank = False, unique = True)
@@ -74,6 +83,7 @@ class Pet(models.Model):
     sexo = models.CharField(max_length = 1, choices = Sexo.choices)
     porte = models.ManyToManyField(Porte, related_name="pets", blank=True)
     cor = models.ManyToManyField(Cor, related_name="pets", blank=True)
+    status = models.CharField(max_length=200, choices=Status.choices)
     ativo = models.BooleanField(default=True)
     
     def __str__(self):
