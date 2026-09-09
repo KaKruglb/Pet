@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pet, Raca, Cor, Porte, Especie, StatusAnuncio, Perfil, Instituicao, Anuncio, Endereco, Preferencia
+from .models import Pet, Raca, Cor, Porte, Especie, Perfil, Anuncio, Preferencia, Mensagem
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -62,44 +62,16 @@ class AnuncioForm(forms.ModelForm):
         model = Anuncio
         fields = ['titulo', 'descricao', 'pet', 'status']
         
-        
-class InstituicaoForm(forms.ModelForm):
-    # Manually declared fields, pulled in from Endereco
-    cep = forms.CharField(max_length=9, label="CEP")
-    logradouro = forms.CharField(max_length=200, label="Logradouro")
-    numero = forms.CharField(max_length=10, label="Número")
-    complemento = forms.CharField(max_length=100, required=False, label="Complemento")
-    bairro = forms.CharField(max_length=100, label="Bairro")
-    cidade = forms.CharField(max_length=100, label="Cidade")
-    estado = forms.CharField(max_length=2, label="Estado")
-
-    class Meta:
-        model = Instituicao
-        fields = ['nome', 'razao', 'tipo', 'cnpj', 'telefone', 'email']
-
-    def save(self, commit=True):
-        endereco = Endereco(
-            cep=self.cleaned_data['cep'],
-            logradouro=self.cleaned_data['logradouro'],
-            numero=self.cleaned_data['numero'],
-            complemento=self.cleaned_data['complemento'],
-            bairro=self.cleaned_data['bairro'],
-            cidade=self.cleaned_data['cidade'],
-            estado=self.cleaned_data['estado'],
-        )
-        if commit:
-            endereco.save()
-
-        instituicao = super().save(commit=False)
-        instituicao.endereco = endereco
-
-        if commit:
-            instituicao.save()
-
-        return instituicao
 
 class PreferenciaForm(forms.ModelForm):
     class Meta:
         model = Preferencia
         fields = ['especie', 'raca', 'porte', 'cor', 'sexo', 'castrado_sim', 'castrado_nao', 'vacinado', 'sociavel', 'idade']
         widgets = { 'sexo': forms.RadioSelect, 'castrado_sim': forms.RadioSelect, 'castrado_nao': forms.RadioSelect, 'vacinado': forms.RadioSelect, 'sociavel':forms.RadioSelect }
+
+
+class MensagemForm(forms.ModelForm):
+    class Meta:
+        model = Mensagem
+        fields = ['conteudo']
+        widgets = { 'conteudo': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Digite sua mensagem...'}) }
