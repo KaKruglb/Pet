@@ -75,7 +75,7 @@ class Pet(models.Model):
     castrado = models.BooleanField(default=False)
     vacinado = models.BooleanField(default=False)
     sociavel = models.BooleanField(default=False)
-    nascimento = models.DateField(default=date.today)
+    nascimento = models.DateField(blank = False)
     descricao = models.CharField(max_length=1500)
     class Sexo(models.TextChoices):
         MACHO = "M", "Macho"

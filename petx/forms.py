@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pet, Raca, Cor, Porte, Perfil
+from .models import Pet, Raca, Cor, Porte, Perfil, instituicao, Anuncio, Tutor, Adotante
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -8,8 +8,8 @@ class PetForm(forms.ModelForm):
     
     class Meta:
         model = Pet
-        fields =  ['descricao', 'nome', 'raca', 'cor', 'porte', 'sexo', 'vacinado', 'castrado' ]
-        widgets = { 'sexo': forms.RadioSelect, 'vacinado': forms.RadioSelect, 'castrado': forms.RadioSelect }
+        fields =  ['descricao', 'nome', 'raca', 'cor', 'porte', 'sexo', 'vacinado', 'castrado', 'sociavel', 'especie', 'nascimento' ]
+        widgets = { 'sexo': forms.RadioSelect, 'vacinado': forms.RadioSelect, 'castrado': forms.RadioSelect, 'sociavel':forms.RadioSelect, 'nascimento': forms.DateInput(attrs={'type': 'date'}) }
         
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
