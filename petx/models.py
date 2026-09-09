@@ -23,7 +23,7 @@ class Porte(models.Model):
         return self.porte
     
     
-class Status(models.Model):
+class StatusAnuncio(models.Model):
     status = models.CharField(max_length = 200, unique = True)
     
     def __str__(self):
@@ -42,7 +42,7 @@ class Perfil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="perfil")
     email = models.EmailField(unique=True, blank = False)
     telefone = models.CharField(max_length=20, blank = False, unique = True)
-    cpf = models.CharField(max_length=14, unique=True, blank = False)
+    cpf = models.CharField(max_length=11, unique=True, blank = False)
     data_nascimento = models.DateField(blank = False)
     ativo = models.BooleanField(default=True)
     
@@ -64,7 +64,8 @@ class Adotante(models.Model):
 
 class Admin(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="admin")
-    
+    perfil = models.OneToOneField(Perfil, on_delete=models.CASCADE, related_name="admin")
+    ativo = models.BooleanField(default=True)
     
 
 class Pet(models.Model): 
@@ -83,7 +84,12 @@ class Pet(models.Model):
     sexo = models.CharField(max_length = 1, choices = Sexo.choices)
     porte = models.ManyToManyField(Porte, related_name="pets", blank=True)
     cor = models.ManyToManyField(Cor, related_name="pets", blank=True)
-    status = models.CharField(max_length=200, choices=Status.choices)
+    class StatusPet(models.TextChoices):
+            DISPONIVEL = "D", "Disponível"
+            EM_ANDAMENTO = "A", "Em andamento"
+            INDISPONIVEL = "I", "Indisponível"
+    
+    status = models.CharField(max_length=1, choices=StatusPet.choices, default="D")
     ativo = models.BooleanField(default=True)
     
     def __str__(self):
@@ -98,42 +104,34 @@ class Instituicao(models.Model):
     email = models.EmailField(unique=True, blank = False)
     telefone = models.CharField(max_length=20, blank = False, unique = True)
     cnpj = models.CharField(max_length=18, unique=True, blank = False)
-    endereco = models.OneToOneField('Endereco', on_delete=models.CASCADE, related_name="instituicao", null=True, blank=True)
-    status = models.BooleanField(default=True)    
+    endereco = models.OneToOneField('Endereco', on_delete=models.CASCADE, related_name="instituicao")
+    ativo = models.BooleanField(default=True)    
     
-    
-    
-class Endereco(models.Model):
-    cep = models.CharField(max_length=9)
-    logradouro = models.CharField(max_length=200)
-    numero = models.CharField(max_length=10)
-    complemento = models.CharField(max_length=100, blank=True)
-    bairro = models.CharField(max_length=100)
-    cidade = models.CharField(max_length=100)
-    estado = models.CharField(max_length=2)
 
- 
  
    
 class Anuncio(models.Model):
-    instituicao = models.ForeignKey(Instituicao, on_delete=models.CASCADE, related_name="anuncios")
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, related_name="anuncios")
+    instituicao = models.ForeignKey(Instituicao, on_delete=models.CASCADE, related_name="anuncios", null=True, blank=True)
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, related_name="anuncios", null=True, blank=True)
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name="anuncios")
     titulo = models.CharField(max_length=200)
     descricao = models.TextField()
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_atualizacao = models.DateTimeField(auto_now=True)
+    status = models.ForeignKey(StatusAnuncio, on_delete=models.CASCADE, related_name="anuncios")
     ativo = models.BooleanField(default=True)
     
     
-class Preferencias(models.Model):
+class Preferencia(models.Model):
     adotante = models.OneToOneField(Adotante, on_delete=models.CASCADE, related_name="preferencias")
     especie = models.ForeignKey(Especie, on_delete=models.CASCADE, related_name="preferencias", blank=True, null=True)
     raca = models.ForeignKey(Raca, on_delete=models.CASCADE, related_name="preferencias", blank=True, null=True)
     porte = models.ForeignKey(Porte, on_delete=models.CASCADE, related_name="preferencias", blank=True, null=True)
     cor = models.ForeignKey(Cor, on_delete=models.CASCADE, related_name="preferencias", blank=True, null=True)
     sexo = models.CharField(max_length=1, choices=Pet.Sexo.choices, blank=True)
-    castrado = models.BooleanField(default=False)
+    castrado_sim = models.BooleanField(default=True)
+    castrado_nao = models.BooleanField(default=True)
     vacinado = models.BooleanField(default=False)
     sociavel = models.BooleanField(default=False)
     idade = models.IntegerField(blank=True, null=True)
+
