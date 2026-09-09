@@ -1,7 +1,5 @@
-import numbers
-
 from django import forms
-from .models import Pet, Raca, Cor, Porte, Especie, Status, Perfil, Instituicao, Anuncio, Tutor, Adotante, Endereco, Preferencia, Admin
+from .models import Pet, Raca, Cor, Porte, Especie, StatusAnuncio, Perfil, Instituicao, Anuncio, Endereco, Preferencia
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -41,21 +39,13 @@ class PerfilForm(forms.ModelForm):
         cpf_digits = ''.join(char for char in cpf if char.isdigit())
         
         if len(cpf_digits) != 11:
-            raise forms.ValidationError('CPF deve conter pelo menos 11 digitos')
-        
-        
-        if len(cpf_digits) >= 11:
-            raise forms.ValidationError('CPF deve conter apenas 11 digitos')
-        
+            raise forms.ValidationError('CPF deve conter exatamente 11 digitos')
         
         if all(x == cpf_digits[0] for x in cpf_digits):
             raise forms.ValidationError('este CPF é inválido.')
         
-        # fazendo checks para automaticamente verificar se um cpf escrito é real ou não, baseado no algoritmo de validação de CPF, ainda não está completo.
-        
         if Perfil.objects.filter(cpf = cpf_digits).exists():
-            raise forms.ValidationError('CPF registrado a outro usuario')
-        
+            raise forms.ValidationError('CPF já registrado a outro usuario')
         
         return cpf_digits
     

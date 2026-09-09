@@ -40,6 +40,7 @@ class Cor(models.Model):
     
 class Perfil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="perfil")
+    # foto = models.CharField(max_length=500, blank=True)
     email = models.EmailField(unique=True, blank = False)
     telefone = models.CharField(max_length=20, blank = False, unique = True)
     cpf = models.CharField(max_length=11, unique=True, blank = False)
@@ -70,6 +71,7 @@ class Admin(models.Model):
 
 class Pet(models.Model): 
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, related_name="pets")
+    # imagem = models.CharField(max_length=500, blank=True)
     nome = models.CharField(max_length=15)
     especie = models.ForeignKey(Especie, on_delete=models.CASCADE, related_name="pets", null=True, blank=True)
     raca = models.ManyToManyField(Raca, related_name="pets", blank=True)
@@ -107,8 +109,14 @@ class Instituicao(models.Model):
     endereco = models.OneToOneField('Endereco', on_delete=models.CASCADE, related_name="instituicao")
     ativo = models.BooleanField(default=True)    
     
-
- 
+class Endereco(models.Model):
+    cep = models.CharField(max_length=9)
+    logradouro = models.CharField(max_length=200)
+    numero = models.CharField(max_length=10)
+    complemento = models.CharField(max_length=100, blank=True)
+    bairro = models.CharField(max_length=100)
+    cidade = models.CharField(max_length=100)
+    estado = models.CharField(max_length=2) 
    
 class Anuncio(models.Model):
     instituicao = models.ForeignKey(Instituicao, on_delete=models.CASCADE, related_name="anuncios", null=True, blank=True)
