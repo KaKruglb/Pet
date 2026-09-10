@@ -7,8 +7,16 @@
       <h2>{% if modo == "editar" %}Editar {{ pet.nome }}{% else %}Cadastre um pet para doação{% endif %}</h2>
       <p class="sub">Ajude um animal a encontrar um novo lar. É rápido e seguro.</p>
 
-      <form method="post" novalidate>
+      <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
+        {% if modo == "editar" and pet.imagem %}
+          <div class="field">
+            <label>Foto atual</label>
+            <div class="thumb" style="width:120px; height:120px; border-radius:var(--radius-sm);">
+              {% include "partials/pet_photo.html" with pet=pet %}
+            </div>
+          </div>
+        {% endif %}
         {% for field in form %}
           <div class="field">
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>

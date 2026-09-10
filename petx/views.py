@@ -107,7 +107,7 @@ def criar_pet(request):
     if not hasattr(request.user, "tutor"):
         raise PermissionDenied
 
-    form = PetForm(request.POST or None)
+    form = PetForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST" and form.is_valid():
         pet = form.save(commit=False)
@@ -127,7 +127,7 @@ def editar_pet(request, pk):
     if pet.tutor.user != request.user:
         raise PermissionDenied
 
-    form = PetForm(request.POST or None, instance=pet)
+    form = PetForm(request.POST or None, request.FILES or None, instance=pet)
 
     if request.method == "POST" and form.is_valid():
         form.save()

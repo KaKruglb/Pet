@@ -67,7 +67,7 @@ class Admin(models.Model):
 
 class Pet(models.Model): 
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, related_name="pets")
-    imagem = models.CharField(max_length=500, blank=True)
+    imagem = models.ImageField(upload_to="pets/", blank=True)
     nome = models.CharField(max_length=15)
     especie = models.CharField(max_length=1, choices=Especie.choices, default=Especie.CACHORRO)
     raca = models.ManyToManyField(Raca, related_name="pets", blank=True)

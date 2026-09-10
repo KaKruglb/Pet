@@ -1,10 +1,10 @@
 {% comment %}
 Uso: {% include "partials/pet_photo.html" with pet=pet %}
-Renderiza a imagem do pet se existir, senão um placeholder colorido com emoji
+Renderiza a foto do pet se existir, senão um placeholder colorido com emoji
 (evita depender de internet/fotos reais para a demo).
 {% endcomment %}
 {% if pet.imagem %}
-  <img src="{{ pet.imagem }}" alt="{{ pet.nome }}">
+  <img src="{{ pet.imagem.url }}" alt="{{ pet.nome }}">
 {% else %}
   <div class="photo-placeholder {{ pet.id|default:0|divisibleby:2|yesno:"a,b" }}">
     <span>{% if pet.especie == "G" %}🐱{% else %}🐶{% endif %}</span>

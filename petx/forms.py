@@ -11,7 +11,7 @@ class PetForm(forms.ModelForm):
 
     class Meta:
         model = Pet
-        fields = ['nome', 'especie', 'raca', 'porte', 'cor', 'sexo', 'nascimento', 'vacinado', 'castrado', 'sociavel', 'status', 'descricao']
+        fields = ['imagem', 'nome', 'especie', 'raca', 'porte', 'cor', 'sexo', 'nascimento', 'vacinado', 'castrado', 'sociavel', 'status', 'descricao']
         widgets = {
             'sexo': forms.RadioSelect,
             'vacinado': forms.Select(choices=SIM_NAO),
