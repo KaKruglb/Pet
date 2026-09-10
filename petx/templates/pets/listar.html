@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Adotar — DevsPets{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="section-title" style="text-align:left; margin-bottom:20px;">
+      <h2 style="margin:0;">Encontre seu novo melhor amigo</h2>
+      <p>Conheça pets que estão esperando por uma família.</p>
+    </div>
+
+    <form method="get" class="search-bar">
+      <input type="text" name="q" value="{{ q }}" placeholder="Buscar por nome...">
+      <select name="especie">
+        <option value="">Espécie (todas)</option>
+        {% for valor, rotulo in especies %}
+          <option value="{{ valor }}" {% if especie_sel == valor %}selected{% endif %}>{{ rotulo }}</option>
+        {% endfor %}
+      </select>
+      <select name="porte">
+        <option value="">Porte (todos)</option>
+        {% for p in portes %}
+          <option value="{{ p.id }}" {% if porte_sel == p.id|stringformat:"s" %}selected{% endif %}>{{ p.porte }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+    </form>
+
+    <div class="results-bar">
+      <span>{{ pets|length }} pet{{ pets|length|pluralize }} encontrado{{ pets|length|pluralize }}</span>
+    </div>
+
+    {% if pets %}
+      <div class="pets-grid">
+        {% for pet in pets %}
+          <a class="pet-card" href="{% url 'detalhe_pet' pet.pk %}">
+            <div class="thumb">
+              {% include "partials/pet_photo.html" with pet=pet %}
+              <span class="badge {% if pet.status == 'A' %}status-a{% elif pet.status == 'I' %}status-i{% endif %}">
+                {{ pet.get_status_display }}
+              </span>
+            </div>
+            <div class="info">
+              <div>
+                <h4>{{ pet.nome }}</h4>
+                <p>{{ pet.get_especie_display }} &middot; {{ pet.get_sexo_display }}</p>
+              </div>
+              <span>❤</span>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p>Nenhum pet encontrado com esses filtros. Tente outra busca.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

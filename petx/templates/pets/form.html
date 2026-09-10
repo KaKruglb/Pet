@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{% if modo == "editar" %}Editar pet{% else %}Cadastrar pet{% endif %} — DevsPets{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="form-card" style="max-width:560px;">
+      <h2>{% if modo == "editar" %}Editar {{ pet.nome }}{% else %}Cadastre um pet para doação{% endif %}</h2>
+      <p class="sub">Ajude um animal a encontrar um novo lar. É rápido e seguro.</p>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<div class="form-error">{{ field.errors|striptags }}</div>{% endif %}
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-block">{% if modo == "editar" %}Salvar alterações{% else %}Cadastrar pet{% endif %}</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

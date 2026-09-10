@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ pet.nome }} — DevsPets{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="breadcrumb"><a href="{% url 'home' %}">Início</a> &rsaquo; <a href="{% url 'listar_pets' %}">Pets</a> &rsaquo; {{ pet.nome }}</div>
+
+    <div class="pet-detail">
+      <div>
+        <div class="gallery-main">
+          {% include "partials/pet_photo.html" with pet=pet %}
+        </div>
+      </div>
+
+      <div>
+        <span class="badge {% if pet.status == 'A' %}status-a{% elif pet.status == 'I' %}status-i{% endif %}" style="position:static; display:inline-block;">{{ pet.get_status_display }}</span>
+        <h1>{{ pet.nome }}</h1>
+        <p class="subtitle">
+          {{ pet.get_especie_display }}
+          {% for r in pet.raca.all %}&middot; {{ r.raca }}{% empty %}&middot; Sem raça definida{% endfor %}
+        </p>
+
+        <div class="quick-facts">
+          <span>♀ {{ pet.get_sexo_display }}</span>
+          <span>📅 Nascimento: {{ pet.nascimento|date:"d/m/Y" }}</span>
+          <span>📏 Porte: {% for p in pet.porte.all %}{{ p.porte }}{% if not forloop.last %}, {% endif %}{% empty %}não informado{% endfor %}</span>
+          <span>🎨 Cor: {% for c in pet.cor.all %}{{ c.cor }}{% if not forloop.last %}, {% endif %}{% empty %}não informada{% endfor %}</span>
+          <span>💉 Vacinado: {{ pet.vacinado|yesno:"Sim,Não" }} &middot; ✂️ Castrado: {{ pet.castrado|yesno:"Sim,Não" }} &middot; 🤝 Sociável: {{ pet.sociavel|yesno:"Sim,Não" }}</span>
+        </div>
+
+        {% if pode_editar %}
+          <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <a href="{% url 'editar_pet' pet.pk %}" class="btn btn-outline btn-sm">Editar</a>
+            <a href="{% url 'desativar_pet' pet.pk %}" class="btn btn-ghost btn-sm">Excluir</a>
+          </div>
+        {% else %}
+          <a href="#" class="btn btn-primary">Quero adotar</a>
+        {% endif %}
+
+        <div class="info-panel" style="margin-top:24px;">
+          <h3>Sobre {{ pet.nome }}</h3>
+          <p style="color:var(--text-muted); font-size:0.92rem;">{{ pet.descricao|default:"Sem descrição." }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

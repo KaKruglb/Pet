@@ -1,0 +1,17 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}DevsPets — Todo pet merece uma história feliz{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+{% include "partials/header.html" %}
+{% include "partials/messages.html" %}
+<main>
+{% block content %}{% endblock %}
+</main>
+{% include "partials/footer.html" %}
+</body>
+</html>

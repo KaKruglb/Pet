@@ -100,12 +100,19 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Login / autenticação
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'meu_painel'
+LOGOUT_REDIRECT_URL = 'login'
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 

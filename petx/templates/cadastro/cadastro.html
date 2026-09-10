@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Criar conta — DevsPets{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="form-card">
+      <h2>Crie sua conta</h2>
+      <p class="sub">Faça parte da comunidade DevsPets.</p>
+
+      <div class="tipo-toggle">
+        <a href="{% url 'cadastro' 'adotante' %}" class="{% if tipo == 'adotante' %}active{% endif %}">Quero adotar</a>
+        <a href="{% url 'cadastro' 'tutor' %}" class="{% if tipo == 'tutor' %}active{% endif %}">Quero doar</a>
+      </div>
+
+      {% if erro %}<div class="form-error">{{ erro }}</div>{% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="field">
+          <label for="username">Nome de usuário</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="field">
+          <label for="telefone">Telefone</label>
+          <input type="tel" id="telefone" name="telefone" required>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="cpf">CPF (só números)</label>
+            <input type="text" id="cpf" name="cpf" maxlength="11" required>
+          </div>
+          <div class="field">
+            <label for="data_nascimento">Nascimento</label>
+            <input type="date" id="data_nascimento" name="data_nascimento" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Criar conta</button>
+      </form>
+
+      <p class="form-footnote">Já tem uma conta? <a href="{% url 'login' %}">Entrar</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

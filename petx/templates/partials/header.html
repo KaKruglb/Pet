@@ -1,0 +1,20 @@
+{% load static %}
+<header class="site-header">
+  <div class="container">
+    <a href="{% url 'home' %}" class="logo"><span class="plus">+</span>DEVS<span class="pets">PETS</span></a>
+    <nav class="main-nav">
+      <a href="{% url 'listar_pets' %}">Adotar</a>
+      <a href="{% url 'home' %}#como-funciona">Como funciona</a>
+      <a href="{% url 'home' %}#historias">Histórias</a>
+    </nav>
+    <div class="header-actions">
+      {% if user.is_authenticated %}
+        <a href="{% url 'meu_painel' %}" class="btn btn-ghost btn-sm">Meu painel</a>
+        <a href="{% url 'logout' %}" class="btn btn-outline btn-sm">Sair</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-ghost btn-sm">Entrar</a>
+        <a href="{% url 'cadastro' 'tutor' %}" class="btn btn-primary btn-sm">Quero doar</a>
+      {% endif %}
+    </div>
+  </div>
+</header>

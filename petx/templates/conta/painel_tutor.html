@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Meu painel — DevsPets{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="section-title" style="text-align:left;">
+      <h2 style="margin:0;">Meus pets para doação</h2>
+      <p>Gerencie os animais que você cadastrou.</p>
+    </div>
+
+    <a href="{% url 'criar_pet' %}" class="btn btn-primary" style="margin-bottom:24px;">+ Cadastrar novo pet</a>
+
+    {% if pets %}
+      <div class="pets-grid">
+        {% for pet in pets %}
+          <a class="pet-card" href="{% url 'detalhe_pet' pet.pk %}">
+            <div class="thumb">
+              {% include "partials/pet_photo.html" with pet=pet %}
+              <span class="badge {% if pet.status == 'A' %}status-a{% elif pet.status == 'I' %}status-i{% endif %}">{{ pet.get_status_display }}</span>
+            </div>
+            <div class="info">
+              <div>
+                <h4>{{ pet.nome }}</h4>
+                <p>{{ pet.get_especie_display }}</p>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state"><p>Você ainda não cadastrou nenhum pet.</p></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

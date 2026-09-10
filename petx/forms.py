@@ -4,12 +4,22 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 
+SIM_NAO = [(True, 'Sim'), (False, 'Não')]
+
+
 class PetForm(forms.ModelForm):
-    
+
     class Meta:
         model = Pet
-        fields =  ['descricao', 'nome', 'raca', 'cor', 'porte', 'sexo', 'vacinado', 'castrado', 'sociavel', 'especie', 'nascimento', 'status']
-        widgets = { 'sexo': forms.RadioSelect, 'vacinado': forms.RadioSelect, 'castrado': forms.RadioSelect, 'sociavel':forms.RadioSelect, 'nascimento': forms.DateInput(attrs={'type': 'date'}) }
+        fields = ['nome', 'especie', 'raca', 'porte', 'cor', 'sexo', 'nascimento', 'vacinado', 'castrado', 'sociavel', 'status', 'descricao']
+        widgets = {
+            'sexo': forms.RadioSelect,
+            'vacinado': forms.Select(choices=SIM_NAO),
+            'castrado': forms.Select(choices=SIM_NAO),
+            'sociavel': forms.Select(choices=SIM_NAO),
+            'nascimento': forms.DateInput(attrs={'type': 'date'}),
+            'descricao': forms.Textarea(attrs={'rows': 4}),
+        }
         
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):

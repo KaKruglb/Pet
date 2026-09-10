@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}DevsPets — Todo pet merece uma história feliz{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">🧡 Um lar muda tudo</span>
+    <h1>Todo pet merece<br>uma história <em>feliz</em>.</h1>
+    <p class="lead">A DevsPets aproxima pessoas de animais que estão esperando por carinho, cuidado e uma nova família.</p>
+    <div class="hero-ctas">
+      <a href="{% url 'listar_pets' %}" class="btn btn-primary">Quero adotar</a>
+      <a href="{% url 'cadastro' 'tutor' %}" class="btn btn-outline">Quero doar um pet</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">Esperando por você</span>
+      <h2>Conheça alguns amigos</h2>
+      <p>Pets disponíveis para adoção agora mesmo.</p>
+    </div>
+
+    {% if pets_destaque %}
+      <div class="pets-grid">
+        {% for pet in pets_destaque %}
+          <a class="pet-card" href="{% url 'detalhe_pet' pet.pk %}">
+            <div class="thumb">
+              {% include "partials/pet_photo.html" with pet=pet %}
+              <span class="badge">Disponível</span>
+            </div>
+            <div class="info">
+              <div>
+                <h4>{{ pet.nome }}</h4>
+                <p>{{ pet.get_especie_display }} &middot; {{ pet.get_sexo_display }}</p>
+              </div>
+              <span>❤</span>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p>Ainda não há pets cadastrados. <a href="{% url 'cadastro' 'tutor' %}">Cadastre-se como tutor</a> e adicione o primeiro!</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
