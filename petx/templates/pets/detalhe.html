@@ -5,6 +5,16 @@
   <div class="container">
     <div class="breadcrumb"><a href="{% url 'home' %}">Início</a> &rsaquo; <a href="{% url 'listar_pets' %}">Pets</a> &rsaquo; {{ pet.nome }}</div>
 
+    {% if precisa_adotante %}
+      <div class="alert alert-error" style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+        <span>Apenas contas de adotante podem enviar solicitações de adoção.</span>
+        <form method="post" action="{% url 'tornar_adotante' pet.pk %}" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-sm" style="white-space:nowrap;">Quero me cadastrar como adotante</button>
+        </form>
+      </div>
+    {% endif %}
+
     <div class="pet-detail">
       <div>
         <div class="gallery-main">
@@ -33,8 +43,10 @@
             <a href="{% url 'editar_pet' pet.pk %}" class="btn btn-outline btn-sm">Editar</a>
             <a href="{% url 'desativar_pet' pet.pk %}" class="btn btn-ghost btn-sm">Excluir</a>
           </div>
+        {% elif pet.status == 'D' %}
+          <a href="{% url 'solicitar_adocao' pet.pk %}" class="btn btn-primary">Quero adotar</a>
         {% else %}
-          <a href="#" class="btn btn-primary">Quero adotar</a>
+          <span class="btn btn-outline" style="opacity:0.6; cursor:default;">Indisponível no momento</span>
         {% endif %}
 
         <div class="info-panel" style="margin-top:24px;">

@@ -15,5 +15,7 @@ urlpatterns = [
     path('pets/novo/', views.criar_pet, name='criar_pet'),
     path('pets/<int:pk>/', views.detalhe_pet, name='detalhe_pet'),
     path('pets/<int:pk>/editar/', views.editar_pet, name='editar_pet'),
+    path('pets/<int:pk>/adotar/', views.solicitar_adocao, name='solicitar_adocao'),
+    path('pets/<int:pk>/tornar-adotante/', views.tornar_adotante, name='tornar_adotante'),
     path('pets/<int:pk>/excluir/', views.desativar_pet, name='desativar_pet'),
 ]

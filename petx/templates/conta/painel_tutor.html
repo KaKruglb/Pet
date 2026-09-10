@@ -30,6 +30,30 @@
     {% else %}
       <div class="empty-state"><p>Você ainda não cadastrou nenhum pet.</p></div>
     {% endif %}
+
+    <div class="section-title" style="text-align:left; margin-top:48px;">
+      <h2 style="margin:0;">Interessados em adotar</h2>
+      <p>Pessoas que enviaram solicitações de adoção para os seus pets.</p>
+    </div>
+
+    {% if solicitacoes %}
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        {% for s in solicitacoes %}
+          <div class="form-card" style="max-width:none;">
+            <h3 style="margin-top:0;">{{ s.adotante.user.username }} quer adotar <a href="{% url 'detalhe_pet' s.pet.pk %}">{{ s.pet.nome }}</a></h3>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:6px;">📧 {{ s.adotante.perfil.email }} &middot; 📞 {{ s.adotante.perfil.telefone }} &middot; {{ s.data_criacao|date:"d/m/Y H:i" }}</p>
+            <p><strong>Motivo:</strong> {{ s.motivo }}</p>
+            <p style="color:var(--text-muted); font-size:0.9rem;">
+              🐾 Já teve pets: {{ s.tem_experiencia|yesno:"Sim,Não" }} &middot;
+              🏠 Mora em: {{ s.get_moradia_display }} &middot;
+              🐕 Tem outros animais: {{ s.outros_animais|yesno:"Sim,Não" }}
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state"><p>Ainda não há solicitações de adoção para os seus pets.</p></div>
+    {% endif %}
   </div>
 </section>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Pet, Raca, Cor, Porte, Especie, Perfil, Anuncio, Preferencia, Mensagem
+from .models import Pet, Raca, Cor, Porte, Especie, Perfil, Anuncio, Preferencia, Mensagem, SolicitacaoAdocao
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -85,3 +85,20 @@ class MensagemForm(forms.ModelForm):
         model = Mensagem
         fields = ['conteudo']
         widgets = { 'conteudo': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Digite sua mensagem...'}) }
+
+
+class SolicitacaoAdocaoForm(forms.ModelForm):
+    class Meta:
+        model = SolicitacaoAdocao
+        fields = ['motivo', 'tem_experiencia', 'moradia', 'outros_animais']
+        labels = {
+            'motivo': 'Por que você quer adotar?',
+            'tem_experiencia': 'Você já teve outros pets antes?',
+            'moradia': 'Você mora em...',
+            'outros_animais': 'Você já tem outros animais em casa?',
+        }
+        widgets = {
+            'motivo': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Conte um pouco sobre por que você quer adotar este pet...'}),
+            'tem_experiencia': forms.Select(choices=SIM_NAO),
+            'outros_animais': forms.Select(choices=SIM_NAO),
+        }

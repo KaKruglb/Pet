@@ -178,6 +178,12 @@ img { max-width: 100%; display: block; }
 .avatar-stack span:first-child { margin-left: 0; }
 
 .hero-image-wrap { position: relative; }
+.hero-image-wrap .photo-placeholder {
+  border-radius: var(--radius-lg);
+  width: 100%;
+  aspect-ratio: 4/3.2;
+  font-size: 6rem;
+}
 .hero-image-wrap img {
   border-radius: var(--radius-lg);
   width: 100%;

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Quero adotar {{ pet.nome }} — DevsPets{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="breadcrumb"><a href="{% url 'home' %}">Início</a> &rsaquo; <a href="{% url 'detalhe_pet' pet.pk %}">{{ pet.nome }}</a> &rsaquo; Quero adotar</div>
+
+    <div class="form-card" style="max-width:560px;">
+      <h2>Quero adotar {{ pet.nome }} 🧡</h2>
+      <p class="sub">Conte um pouco sobre você para que o tutor possa conhecer melhor quem está se candidatando.</p>
+
+      {% if ja_enviou %}
+        <div class="empty-state">
+          <p>Você já enviou uma solicitação de interesse para {{ pet.nome }}. O tutor já pode ver suas respostas e vai entrar em contato.</p>
+        </div>
+        <a href="{% url 'detalhe_pet' pet.pk %}" class="btn btn-outline btn-block" style="margin-top:16px;">Voltar para {{ pet.nome }}</a>
+      {% else %}
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="field">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}<div class="form-error">{{ field.errors|striptags }}</div>{% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary btn-block">Enviar solicitação</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

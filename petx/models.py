@@ -130,4 +130,21 @@ class Mensagem(models.Model):
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_atualizacao = models.DateTimeField(auto_now=True)
     ativo = models.BooleanField(default=True)
-    
+
+
+class Moradia(models.TextChoices):
+    CASA = "CASA", "Casa"
+    APARTAMENTO = "APTO", "Apartamento"
+
+
+class SolicitacaoAdocao(models.Model):
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name="solicitacoes")
+    adotante = models.ForeignKey(Adotante, on_delete=models.CASCADE, related_name="solicitacoes")
+    motivo = models.TextField(help_text="Por que você quer adotar este pet?")
+    tem_experiencia = models.BooleanField(default=False, help_text="Já teve outros pets antes?")
+    moradia = models.CharField(max_length=4, choices=Moradia.choices, default=Moradia.CASA)
+    outros_animais = models.BooleanField(default=False, help_text="Já tem outros animais em casa?")
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.adotante.user.username} → {self.pet.nome}"

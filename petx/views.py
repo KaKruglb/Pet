@@ -4,13 +4,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Perfil, Tutor, Adotante, Pet, Especie, Porte
-from .forms import PetForm
+from django.urls import reverse
+from .models import Perfil, Tutor, Adotante, Pet, Especie, Porte, SolicitacaoAdocao
+from .forms import PetForm, SolicitacaoAdocaoForm
 
 
 def home_view(request):
-    pets_destaque = Pet.objects.filter(ativo=True, status="D").order_by("-id")[:6]
-    return render(request, "home.html", {"pets_destaque": pets_destaque})
+    disponiveis = Pet.objects.filter(ativo=True, status="D")
+    pets_destaque = disponiveis.order_by("-id")[:6]
+    return render(request, "home.html", {
+        "pets_destaque": pets_destaque,
+        "total_disponiveis": disponiveis.count(),
+    })
 
 
 def cadastro(request, tipo):
@@ -65,7 +70,11 @@ def logout_view(request):
 @login_required
 def meu_painel(request):
     if hasattr(request.user, "tutor"):
-        return render(request, "conta/painel_tutor.html", {"pets": request.user.tutor.pets.filter(ativo=True)})
+        solicitacoes = SolicitacaoAdocao.objects.filter(pet__tutor=request.user.tutor).select_related("pet", "adotante__user").order_by("-data_criacao")
+        return render(request, "conta/painel_tutor.html", {
+            "pets": request.user.tutor.pets.filter(ativo=True),
+            "solicitacoes": solicitacoes,
+        })
     if hasattr(request.user, "adotante"):
         return render(request, "conta/painel_adotante.html")
     return redirect("home")
@@ -99,7 +108,8 @@ def listar_pets(request):
 def detalhe_pet(request, pk):
     pet = get_object_or_404(Pet, pk=pk, ativo=True)
     pode_editar = request.user.is_authenticated and hasattr(request.user, "tutor") and pet.tutor.user == request.user
-    return render(request, "pets/detalhe.html", {"pet": pet, "pode_editar": pode_editar})
+    precisa_adotante = request.GET.get("precisa_adotante") == "1"
+    return render(request, "pets/detalhe.html", {"pet": pet, "pode_editar": pode_editar, "precisa_adotante": precisa_adotante})
 
 
 @login_required
@@ -135,6 +145,49 @@ def editar_pet(request, pk):
         return redirect("detalhe_pet", pk=pet.pk)
 
     return render(request, "pets/form.html", {"form": form, "modo": "editar", "pet": pet})
+
+
+@login_required
+def solicitar_adocao(request, pk):
+    pet = get_object_or_404(Pet, pk=pk, ativo=True)
+
+    if not hasattr(request.user, "adotante"):
+        return redirect(f"{reverse('detalhe_pet', args=[pet.pk])}?precisa_adotante=1")
+
+    if hasattr(request.user, "tutor") and pet.tutor.user == request.user:
+        raise PermissionDenied
+
+    adotante = request.user.adotante
+    ja_enviou = SolicitacaoAdocao.objects.filter(pet=pet, adotante=adotante).exists()
+
+    form = SolicitacaoAdocaoForm(request.POST or None)
+
+    if not ja_enviou and request.method == "POST" and form.is_valid():
+        solicitacao = form.save(commit=False)
+        solicitacao.pet = pet
+        solicitacao.adotante = adotante
+        solicitacao.save()
+        messages.success(request, f"Seu interesse em {pet.nome} foi enviado! O tutor vai poder ver suas respostas e entrar em contato.")
+        return redirect("detalhe_pet", pk=pet.pk)
+
+    return render(request, "pets/solicitar_adocao.html", {"pet": pet, "form": form, "ja_enviou": ja_enviou})
+
+
+@login_required
+def tornar_adotante(request, pk):
+    """Cadastra o usuário logado como adotante na hora, sem formulário extra,
+    para que ele possa enviar a solicitação de adoção imediatamente."""
+    pet = get_object_or_404(Pet, pk=pk, ativo=True)
+
+    if request.method == "POST" and not hasattr(request.user, "adotante"):
+        if hasattr(request.user, "perfil"):
+            Adotante.objects.get_or_create(user=request.user, perfil=request.user.perfil)
+            messages.success(request, "Cadastro de adotante concluído! Agora você já pode enviar seu interesse.")
+        else:
+            messages.error(request, "Não foi possível concluir o cadastro automaticamente. Saia da conta e cadastre-se como adotante.")
+            return redirect("detalhe_pet", pk=pet.pk)
+
+    return redirect("solicitar_adocao", pk=pet.pk)
 
 
 @login_required
