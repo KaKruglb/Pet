@@ -120,7 +120,9 @@ class Conversa(models.Model):
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_atualizacao = models.DateTimeField(auto_now=True)
     ativo = models.BooleanField(default=True)
-    
+
+
+
 class Mensagem(models.Model):
     conversa = models.ForeignKey(Conversa, on_delete=models.CASCADE, related_name="mensagens")
     remetente = models.ForeignKey(User, on_delete=models.CASCADE, related_name="mensagens_enviadas")
